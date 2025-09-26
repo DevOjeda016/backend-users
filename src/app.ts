@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import "dotenv/config";
-/* import userRoutes from "./routes/user.routes"; */
+import userRoutes from "./users/user.routes";
 import { errorHandler, notFoundHandler } from "./middleware/error-handler";
 
 const app = express();
@@ -52,10 +52,10 @@ app.get("/health", (_, res: Response) => {
 });
 
 // Rutas de API
-/* app.use("/api/users", userRoutes); */
+app.use("/api/users", userRoutes);
 
 // Middleware para rutas no encontradas
-app.use("*", notFoundHandler);
+app.use(notFoundHandler);
 
 // Middleware de manejo de errores (debe ir al final)
 app.use(errorHandler);

@@ -1,203 +1,518 @@
-# Backend Users - Client-Server Project
+# Backend Users API 🚀
 
-Backend service for user management in a client-server architecture.
+API REST para gestión de usuarios con autenticación y operaciones CRUD completas.
 
-## 📋 Table of Contents
+## 📋 Descripción
 
-- [About](#about)
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [API Endpoints](#api-endpoints)
-- [Database Schema](#database-schema)
-- [Testing](#testing)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [License](#license)
+Esta API proporciona un sistema completo de gestión de usuarios con las siguientes funcionalidades:
+- Registro de usuarios con validación de datos
+- Autenticación de usuarios (login)
+- Operaciones CRUD completas para usuarios
+- Validación de emails únicos
+- Hash de contraseñas con bcrypt
+- Sistema de roles
+- Manejo de errores robusto
 
-## 🎯 About
+## 🛠️ Tecnologías
 
-This is the backend service for user management, built as part of a client-server architecture project. It provides RESTful APIs for user authentication, registration, profile management, and related operations.
+- **Node.js** + **TypeScript**
+- **Express.js** - Framework web
+- **Drizzle ORM** - ORM para base de datos
+- **PostgreSQL** (Neon Database) - Base de datos
+- **bcrypt** - Hash de contraseñas
+- **dotenv** - Variables de entorno
 
-## ✨ Features
+## 🚀 Instalación y Configuración
 
-- User registration and authentication
-- JWT-based authorization
-- Password hashing and security
-- User profile management
-- Input validation and sanitization
-- Error handling and logging
-- API rate limiting
-- Database integration
-- Environment-based configuration
+### 1. Clonar el repositorio
+```bash
+git clone <repository-url>
+cd backend-users
+```
 
-## 🔧 Prerequisites
+### 2. Instalar dependencias
+```bash
+npm install
+```
 
-Before running this project, make sure you have the following installed:
-
-- [Node.js](https://nodejs.org/) (version 16.x or higher)
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
-- [MongoDB](https://www.mongodb.com/) or [PostgreSQL](https://www.postgresql.org/) (depending on your setup)
-- [Git](https://git-scm.com/)
-
-## 🚀 Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd backend-users
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   ```
-   Edit the `.env` file with your configuration values.
-
-## ⚙️ Configuration
-
-Create a `.env` file in the root directory with the following variables:
-
+### 3. Configurar variables de entorno
+Crear archivo `.env` con:
 ```env
-# Server Configuration
 PORT=3000
-NODE_ENV=development
-
-# Database Configuration
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=users_db
-DB_USER=your_username
-DB_PASSWORD=your_password
-DB_URL=mongodb://localhost:27017/users_db
-
-# JWT Configuration
-JWT_SECRET=your_super_secret_jwt_key
-JWT_EXPIRES_IN=24h
-JWT_REFRESH_EXPIRES_IN=7d
-
-# Security
-BCRYPT_SALT_ROUNDS=12
-RATE_LIMIT_WINDOW_MS=900000
-RATE_LIMIT_MAX_REQUESTS=100
-
-# Email Configuration (optional)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your_email@gmail.com
-SMTP_PASS=your_app_password
-
-# Logging
-LOG_LEVEL=info
+DATABASE_URL=your_postgresql_connection_string
 ```
 
-## 🎮 Usage
-
-### Development Mode
+### 4. Ejecutar migraciones
 ```bash
+npx tsx migrate.ts
+```
+
+### 5. Ejecutar la aplicación
+```bash
+# Desarrollo
 npm run dev
-# or
-yarn dev
+
+# Producción
+npm run start
 ```
 
-### Production Mode
-```bash
-npm run build
-npm start
-# or
-yarn build
-yarn start
+## 📚 Documentación de Endpoints
+
+### Base URL
+```
+http://localhost:3000
 ```
 
-### Other Scripts
-```bash
-# Run tests
-npm test
+---
 
-# Run tests with coverage
-npm run test:coverage
+## 🏠 Endpoints de Sistema
 
-# Lint code
-npm run lint
+### 1. Información General de la API
+**GET** `/`
 
-# Format code
-npm run format
+Obtiene información básica sobre la API.
 
-# Database migrations
-npm run migrate
-
-# Database seeds
-npm run seed
-```
-
-## 🛠️ API Endpoints
-
-### Authentication
-```
-POST   /api/auth/register       # User registration
-POST   /api/auth/login          # User login
-POST   /api/auth/refresh        # Refresh JWT token
-POST   /api/auth/logout         # User logout
-POST   /api/auth/forgot-password # Request password reset
-POST   /api/auth/reset-password  # Reset password
-```
-
-### Users
-```
-GET    /api/users               # Get all users (admin only)
-GET    /api/users/:id           # Get user by ID
-PUT    /api/users/:id           # Update user
-DELETE /api/users/:id           # Delete user
-GET    /api/users/profile       # Get current user profile
-PUT    /api/users/profile       # Update current user profile
-```
-
-### Health Check
-```
-GET    /api/health              # Health check endpoint
-```
-
-### API Documentation
-- Swagger UI: `http://localhost:3000/api-docs` (when running locally)
-
-## 🗄️ Database Schema
-
-### User Model
-```javascript
+**Response:**
+```json
 {
-  id: String,
-  email: String (unique),
-  password: String (hashed),
-  firstName: String,
-  lastName: String,
-  role: String (enum: 'user', 'admin'),
-  isActive: Boolean,
-  emailVerified: Boolean,
-  lastLogin: Date,
-  createdAt: Date,
-  updatedAt: Date
+  "success": true,
+  "message": "Backend Users API - CRUD de Usuarios",
+  "version": "1.0.0",
+  "endpoints": {
+    "auth": "/api/auth",
+    "users": "/api/users",
+    "health": "/health"
+  }
 }
 ```
 
-## 🧪 Testing
+### 2. Health Check
+**GET** `/health`
+
+Verifica el estado de salud de la API.
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "API funcionando correctamente",
+  "timestamp": "2025-09-26T19:43:52.076Z",
+  "uptime": 309.5268467
+}
+```
+
+---
+
+## 👤 Endpoints de Usuarios
+
+### 3. Crear Usuario
+**POST** `/api/users`
+
+Registra un nuevo usuario en el sistema.
+
+**Request Body:**
+```json
+{
+  "name": "Juan Pérez",
+  "email": "juan@example.com",
+  "password": "miPassword123",
+  "idRol": 1,
+  "active": true
+}
+```
+
+**Campos:**
+- `name` (string, requerido): Nombre completo del usuario
+- `email` (string, requerido): Email único del usuario
+- `password` (string, requerido): Contraseña (mínimo 6 caracteres)
+- `idRol` (number, requerido): ID del rol (1=admin, 2=user)
+- `active` (boolean, opcional): Estado del usuario (default: true)
+
+**Response Exitoso (201):**
+```json
+{
+  "success": true,
+  "message": "Usuario creado exitosamente",
+  "data": {
+    "id": 1,
+    "name": "Juan Pérez",
+    "email": "juan@example.com",
+    "active": true,
+    "idRol": 1
+  }
+}
+```
+
+**Errores posibles:**
+- 400: Email ya registrado, datos inválidos
+- 500: Error del servidor
+
+### 4. Login de Usuario
+**POST** `/api/users/login`
+
+Autentica un usuario existente.
+
+**Request Body:**
+```json
+{
+  "email": "juan@example.com",
+  "password": "miPassword123"
+}
+```
+
+**Campos:**
+- `email` (string, requerido): Email del usuario
+- `password` (string, requerido): Contraseña del usuario
+
+**Response Exitoso (200):**
+```json
+{
+  "success": true,
+  "message": "Autenticación exitosa",
+  "data": {
+    "id": 1,
+    "name": "Juan Pérez",
+    "email": "juan@example.com",
+    "active": true,
+    "idRol": 1
+  }
+}
+```
+
+**Errores posibles:**
+- 401: Credenciales inválidas
+- 400: Usuario inactivo
+- 500: Error del servidor
+
+### 5. Obtener Todos los Usuarios
+**GET** `/api/users`
+
+Obtiene la lista completa de usuarios registrados.
+
+**Response Exitoso (200):**
+```json
+{
+  "success": true,
+  "message": "Usuarios obtenidos exitosamente",
+  "data": [
+    {
+      "id": 1,
+      "name": "Juan Pérez",
+      "email": "juan@example.com",
+      "active": true,
+      "idRol": 1
+    },
+    {
+      "id": 2,
+      "name": "María García",
+      "email": "maria@example.com",
+      "active": true,
+      "idRol": 2
+    }
+  ],
+  "count": 2
+}
+```
+
+### 6. Obtener Usuario por ID
+**GET** `/api/users/:id`
+
+Obtiene un usuario específico por su ID.
+
+**Parámetros:**
+- `id` (number): ID del usuario a obtener
+
+**Ejemplo:** `GET /api/users/1`
+
+**Response Exitoso (200):**
+```json
+{
+  "success": true,
+  "message": "Usuario obtenido exitosamente",
+  "data": {
+    "id": 1,
+    "name": "Juan Pérez",
+    "email": "juan@example.com",
+    "active": true,
+    "idRol": 1
+  }
+}
+```
+
+**Errores posibles:**
+- 404: Usuario no encontrado
+- 400: ID inválido
+
+### 7. Obtener Usuario por Email
+**GET** `/api/users/email/:email`
+
+Obtiene un usuario específico por su email.
+
+**Parámetros:**
+- `email` (string): Email del usuario a obtener
+
+**Ejemplo:** `GET /api/users/email/juan@example.com`
+
+**Response Exitoso (200):**
+```json
+{
+  "success": true,
+  "message": "Usuario obtenido exitosamente",
+  "data": {
+    "id": 1,
+    "name": "Juan Pérez",
+    "email": "juan@example.com",
+    "active": true,
+    "idRol": 1
+  }
+}
+```
+
+**Errores posibles:**
+- 404: Usuario no encontrado
+- 400: Email requerido
+
+### 8. Actualizar Usuario
+**PUT** `/api/users/:id`
+
+Actualiza los datos de un usuario existente.
+
+**Parámetros:**
+- `id` (number): ID del usuario a actualizar
+
+**Request Body (todos los campos son opcionales):**
+```json
+{
+  "name": "Juan Carlos Pérez",
+  "email": "juancarlos@example.com",
+  "password": "nuevaPassword456",
+  "active": false,
+  "idRol": 2
+}
+```
+
+**Campos opcionales:**
+- `name` (string): Nuevo nombre del usuario
+- `email` (string): Nuevo email (debe ser único)
+- `password` (string): Nueva contraseña (mínimo 6 caracteres)
+- `active` (boolean): Nuevo estado del usuario
+- `idRol` (number): Nuevo rol del usuario
+
+**Response Exitoso (200):**
+```json
+{
+  "success": true,
+  "message": "Usuario actualizado exitosamente",
+  "data": {
+    "id": 1,
+    "name": "Juan Carlos Pérez",
+    "email": "juancarlos@example.com",
+    "active": false,
+    "idRol": 2
+  }
+}
+```
+
+**Errores posibles:**
+- 404: Usuario no encontrado
+- 400: Datos inválidos, email ya en uso
+- 500: Error del servidor
+
+### 9. Eliminar Usuario
+**DELETE** `/api/users/:id`
+
+Elimina un usuario del sistema.
+
+**Parámetros:**
+- `id` (number): ID del usuario a eliminar
+
+**Ejemplo:** `DELETE /api/users/1`
+
+**Response Exitoso (200):**
+```json
+{
+  "success": true,
+  "message": "Usuario eliminado exitosamente"
+}
+```
+
+**Errores posibles:**
+- 404: Usuario no encontrado
+- 400: ID inválido
+- 500: Error del servidor
+
+---
+
+## 🔧 Configuración para Postman
+
+### 1. Crear una nueva Collection
+- Nombre: "Backend Users API"
+- Base URL: `http://localhost:3000`
+
+### 2. Variables de Entorno (opcional)
+```json
+{
+  "baseUrl": "http://localhost:3000",
+  "userId": "1",
+  "userEmail": "test@example.com"
+}
+```
+
+### 3. Headers Globales
+Agregar a todas las requests:
+```
+Content-Type: application/json
+Accept: application/json
+```
+
+### 4. Ejemplos de Requests para Postman
+
+#### Crear Usuario
+```
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "password": "password123",
+  "idRol": 1
+}
+```
+
+#### Login
+```
+POST {{baseUrl}}/api/users/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+```
+
+#### Obtener Usuario por ID
+```
+GET {{baseUrl}}/api/users/{{userId}}
+```
+
+#### Actualizar Usuario
+```
+PUT {{baseUrl}}/api/users/{{userId}}
+Content-Type: application/json
+
+{
+  "name": "Updated User Name"
+}
+```
+
+---
+
+## 📝 Códigos de Estado HTTP
+
+| Código | Descripción |
+|--------|-------------|
+| 200 | OK - Operación exitosa |
+| 201 | Created - Recurso creado exitosamente |
+| 400 | Bad Request - Datos inválidos |
+| 401 | Unauthorized - Credenciales inválidas |
+| 404 | Not Found - Recurso no encontrado |
+| 500 | Internal Server Error - Error del servidor |
+
+---
+
+## 🔒 Seguridad
+
+- Las contraseñas se almacenan hasheadas con bcrypt
+- Las respuestas nunca incluyen contraseñas hasheadas
+- Validación de formato de email
+- Validación de longitud mínima de contraseña (6 caracteres)
+- Verificación de unicidad de emails
+- Verificación de existencia de usuarios antes de actualizar/eliminar
+- Hash de contraseñas con bcrypt
+- Manejo de errores apropiado (404, 500, etc.)
+- Middleware de CORS configurado
+- Middleware de logging funcional
+
+---
+
+## 🗃️ Base de Datos
+
+### Tabla: roles
+```sql
+CREATE TABLE roles (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  role VARCHAR(25) NOT NULL
+);
+```
+
+**Roles por defecto:**
+- ID 1: admin
+- ID 2: user
+
+### Tabla: users
+```sql
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  passwordHashed VARCHAR(255) NOT NULL,
+  active BOOLEAN NOT NULL,
+  idRol INTEGER NOT NULL REFERENCES roles(id)
+);
+```
+
+---
+
+## 🐛 Manejo de Errores
+
+Todos los errores siguen el siguiente formato:
+
+```json
+{
+  "success": false,
+  "message": "Descripción del error",
+  "error": "Detalles técnicos (solo en desarrollo)"
+}
+```
+
+---
+
+## 🧪 Scripts Disponibles
 
 ```bash
-# Run all tests
-npm test
+# Desarrollo con auto-reload
+npm run dev
 
-# Run tests in watch mode
-npm run test:watch
+# Producción
+npm run start
 
-# Run tests with coverage report
+# Compilar TypeScript
+npm run build
+
+# Linting
+npm run lint
+npm run lint:fix
+
+# Formateo de código
+npm run format
+npm run format:fix
+
+# Ejecutar migraciones
+npx tsx migrate.ts
+```
+
+---
+
+## 📞 Soporte
+
+Para reportar bugs o solicitar nuevas funcionalidades, por favor crear un issue en el repositorio.
+
+---
+
+## 📄 Licencia
+
+ISC License
 npm run test:coverage
 
 # Run specific test file
