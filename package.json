@@ -4,11 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "cross-env NODE_ENV=production tsx ./src/index.ts",
     "dev": "cross-env NODE_ENV=development tsx ./src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --build",
     "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix",
-    "format": "npx prettier --write ./src"
+    "lint:fix": "eslint --fix ./src",
+    "format": "prettier ./src --check",
+    "format:fix": "prettier ./src --write",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
