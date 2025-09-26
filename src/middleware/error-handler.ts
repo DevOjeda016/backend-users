@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from "express";
 import { CustomError } from "../errors/custom-errors";
 
@@ -77,7 +78,6 @@ export const errorHandler = (
   error: Error,
   req: Request,
   res: Response,
-  next: NextFunction
 ): void => {
   // Registrar el error
   logError(error, req);
